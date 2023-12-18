@@ -8,7 +8,7 @@
       </header>
       <div class="singin-container">
         <el-card class="singin-card">
-          <h2>Sing up</h2>
+          <h2>Sing in</h2>
           <el-form ref="signupForm" :model="signupForm" label-width="120px">
             <el-form-item label="Email" prop="email" :error="emailError" >
               <el-input v-model="signupForm.email" placeholder="Enter your email" @input="validateEmail"></el-input>
@@ -20,7 +20,7 @@
             <el-input type="password" v-model="signupForm.confirmPassword" placeholder="Confirm your password"></el-input>
           </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="signup"  >Sign up</el-button>
+              <el-button type="primary" @click="signup"  >Sign in</el-button>
             </el-form-item>
             <div class="feedback-message" v-if="feedbackMessage">{{ feedbackMessage }}</div>
           </el-form>
