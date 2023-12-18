@@ -34,6 +34,7 @@ const db = mysql.createConnection({
   user: 'root',
   password: '',
   database: 'project_management',
+  PORT: 3000,
 });
 
 // Conectar a la base de datos
