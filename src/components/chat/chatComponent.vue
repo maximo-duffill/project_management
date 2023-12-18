@@ -1,65 +1,31 @@
-<!-- Main component template -->
 <template>
-    <div v-if="loggedInUser" class="chat-box" :class="{ 'chat-box-shrink': isShrunk }">
-      <div class="chat-header" @click="toggleChat">Chat</div>
-      <div v-if="!isShrunk">
-        <!-- Pass users array to user-list and listen for the users-fetched event -->
-        <UserListComponent :users="users" @users-fetched="updateUsers" @open-chat="openChat" />
-        <chat-messages :messages="messages" />
+  <div class="chat-window">
+    <div class="chat-header">
+      {{ activeUser ? activeUser.email : 'Chat' }}
+      <span class="close-button" @click="closeChat">&times;</span>
+    </div>
+    <div class="chat-messages">
+      <div v-for="message in messages" :key="message.id">
+        {{ message.sender.email }}: {{ message.text }}
       </div>
     </div>
-  </template>
-  
-  <!-- Main component script -->
-  <script>
-  import axios from 'axios';
-  import UserListComponent from './userListComponent.vue';
-  
-  export default {
-    data() {
-      return {
-        isShrunk: false,
-        users: [],
-        messages: [],
-      };
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    activeUser: Object,
+    messages: Array,
+  },
+  methods: {
+    closeChat() {
+      // Emit an event to notify the parent component to close the chat
+      this.$emit('close-chat');
     },
-    computed: {
-      loggedInUser() {
-        return this.$store.state.user;
-      },
-    },
-    created() {
-      // Fetch messages when the component is created
-      this.fetchMessages();
-    },
-    methods: {
-      async fetchMessages() {
-        try {
-          const response = await axios.get('http://localhost:3000/messages');
-          this.messages = response.data;
-        } catch (error) {
-          console.error('Error fetching messages:', error);
-        }
-      },
-      updateUsers(users) {
-        // Update the users data with the fetched users
-        this.users = users;
-      },
-      toggleChat() {
-        this.isShrunk = !this.isShrunk;
-        // Implement additional logic as needed
-        console.log('Toggle chat');
-      },
-      openChat(user) {
-        // Implement logic to open a chat with the selected user
-        console.log('Open chat with user:', user);
-      },
-    },
-    components: {
-      UserListComponent,
-    },
-  };
-  </script>
+  },
+};
+</script>
   
   <!-- Main component style -->
   <style scoped>

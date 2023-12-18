@@ -54,6 +54,20 @@
       return this.$store.state.user;
     },
   },
+  beforeRouteEnter(to, from, next) {
+    // Check if the user is logged in before entering the route
+    if (!this.$store.state.user) {
+      next('/');
+    } else {
+      next();
+    }
+  },
+  created() {
+    // Check if the user is logged in on component creation (page load/refresh)
+    if (!this.$store.state.user) {
+      this.$router.push('/');
+    }
+  },
     data() {
       return {
         projectName: '',
@@ -99,6 +113,7 @@
       },
       async logout() {
       this.$store.commit('clearUser');
+      this.$router.push('/');
     }
     },
   };

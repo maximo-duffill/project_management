@@ -34,7 +34,6 @@ const db = mysql.createConnection({
   user: 'root',
   password: '',
   database: 'project_management',
-  PORT: 3000,
 });
 
 // Conectar a la base de datos
@@ -185,20 +184,35 @@ app.get('/projects', async (req, res) => {
   }
 });
 
-app.delete('/projects/:id', (req, res) => {
-  const projectId = parseInt(req.params.id);
+app.delete('/projects/:projectId', async (req, res) => {
+  const projectId = req.params.projectId;
 
-  // Find the index of the project in the array
-  const projectIndex = projects.findIndex((project) => project.project_id === projectId);
+  try {
+    // Check if the project with the given ID exists
+    const [project] = await db
+      .promise()
+      .query('SELECT * FROM project_management.projects WHERE project_id = ?', [projectId]);
 
-  if (projectIndex !== -1) {
-    // Remove the project from the array
-    projects.splice(projectIndex, 1);
-    res.json({ success: true, message: 'Project removed successfully' });
-  } else {
-    res.status(404).json({ success: false, message: 'Project not found' });
+    if (project.length === 0) {
+      return res.status(404).json({ success: false, message: 'Project not found' });
+    }
+
+    // Delete the project from the database
+    const [result] = await db
+      .promise()
+      .query('DELETE FROM project_management.projects WHERE project_id = ?', [projectId]);
+
+    if (result.affectedRows > 0) {
+      res.status(200).json({ success: true, message: 'Project deleted successfully.' });
+    } else {
+      res.status(500).json({ success: false, message: 'Failed to delete project from the database.' });
+    }
+  } catch (error) {
+    console.error('Error deleting project from the database:', error);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 });
+
 
 
 app.get('/users', async (req, res) => {

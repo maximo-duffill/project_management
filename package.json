@@ -10,7 +10,8 @@
     "start-client": "npm run serve",
     "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
     "deploy": "gh-pages -d dist",
-    "desplegar": "concurrently \"npm run start-server\" \"npm run start-client\" \"npm run deploy\""
+    "desplegar": "concurrently \"npm run start-server\" \"npm run start-client\" \"npm run deploy\"",
+    "start-both": "concurrently \"http-server dist\" \"npm run start-server\""
   },
   "dependencies": {
     "axios": "^1.6.2",
